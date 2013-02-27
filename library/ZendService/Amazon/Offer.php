@@ -75,12 +75,20 @@ class Offer
     {
         $xpath = new DOMXPath($dom->ownerDocument);
         $xpath->registerNamespace('az', 'http://webservices.amazon.com/AWSECommerceService/' . Amazon::getVersion());
-        $this->MerchantId = (string) $xpath->query('./az:Merchant/az:MerchantId/text()', $dom)->item(0)->data;
+        try {
+            $this->MerchantId = (string) $xpath->query('./az:Merchant/az:MerchantId/text()', $dom)->item(0)->data;
+        } catch(Exception $e) {
+            $this->MerchantId = '0';
+        }
         $name = $xpath->query('./az:Merchant/az:Name/text()', $dom);
         if ($name->length == 1) {
           $this->MerchantName = (string) $name->item(0)->data;
         }
-        $this->GlancePage = (string) $xpath->query('./az:Merchant/az:GlancePage/text()', $dom)->item(0)->data;
+        try {
+            $this->GlancePage = (string) $xpath->query('./az:Merchant/az:GlancePage/text()', $dom)->item(0)->data;
+        } catch(Exception $e) {
+            $this->GlancePage = '';
+        }
         $this->Condition = (string) $xpath->query('./az:OfferAttributes/az:Condition/text()', $dom)->item(0)->data;
         $this->OfferListingId = (string) $xpath->query('./az:OfferListing/az:OfferListingId/text()', $dom)->item(0)->data;
         $Price = $xpath->query('./az:OfferListing/az:Price/az:Amount', $dom);
